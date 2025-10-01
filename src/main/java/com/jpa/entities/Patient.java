@@ -1,5 +1,8 @@
 package com.jpa.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.jpa.types.BloodGroup;
 import com.jpa.types.Gender;
 import jakarta.persistence.*;
@@ -12,6 +15,10 @@ import java.util.List;
 
 @Entity
 @Table( name = "patient")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "patientId"
+)
 public class Patient {
 
     @Id
@@ -42,11 +49,13 @@ public class Patient {
     @Column( nullable = false , updatable = false )
     private LocalDateTime createdAt ;
 
-    @OneToOne( cascade = { CascadeType.MERGE , CascadeType.PERSIST , CascadeType.REMOVE})
+//    @JsonManagedReference
+    @OneToOne( cascade = { CascadeType.MERGE , CascadeType.PERSIST , CascadeType.REMOVE} , orphanRemoval = true)
     @JoinColumn( name = "insuranceId")
     private Insurance insurance ;
 
-    @OneToMany( mappedBy = "patient")
+//    @JsonManagedReference
+    @OneToMany( mappedBy = "patient" , cascade = {CascadeType.REMOVE,CascadeType.MERGE,CascadeType.PERSIST} , orphanRemoval = true)
     private List<Appointment> appointmentList = new ArrayList<>() ;
 
     public Patient() {

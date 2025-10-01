@@ -1,6 +1,8 @@
 package com.jpa.entities;
-
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -8,6 +10,10 @@ import java.util.List;
 
 @Entity
 @Table( name = "department")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "departmentId"
+)
 public class Department {
 
     @Id
@@ -18,7 +24,8 @@ public class Department {
     private String departmentName ;
 
     @OneToOne
-    @JoinColumn( nullable = false , name = "headDoctorId")
+    @JoinColumn(  name = "headDoctorId")
+//    @JsonManagedReference("department-head-doctor")
     private Doctor headDoctor ;
 
     @ManyToMany
@@ -27,6 +34,7 @@ public class Department {
             joinColumns = @JoinColumn( name = "departmentId") ,
             inverseJoinColumns = @JoinColumn( name = "doctorId")
     )
+//    @JsonManagedReference("doctor-departments")
     private List<Doctor> departmentDoctorsList = new ArrayList<>() ;
 
     public Department() {

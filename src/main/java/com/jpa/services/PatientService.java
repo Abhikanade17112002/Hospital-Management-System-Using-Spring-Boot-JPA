@@ -1,5 +1,8 @@
 package com.jpa.services;
 
+import com.jpa.DTOs.DissAssociatePatientInsuranceDTO;
+import com.jpa.DTOs.DissassociateAppointmentRequestDTO;
+import com.jpa.entities.Appointment;
 import com.jpa.entities.Insurance;
 import com.jpa.entities.Patient;
 import com.jpa.repositories.PatientRepository;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientService {
@@ -60,5 +64,31 @@ public class PatientService {
         }
 
         return  retrivedPatient ;
+    }
+
+    public List<Patient> getAllPatients() {
+        return patientRepository.findAll() ;
+    }
+
+    public Patient dissassociatePatientWithAppointment(DissassociateAppointmentRequestDTO dto) {
+        Patient retrivedPatient = patientRepository.findById(dto.getPatientId())
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+        // Find the appointment to remove
+        retrivedPatient.getAppointmentList()
+                .removeIf(appt -> appt.getAppointmentId().equals(dto.getAppointmentId()));
+
+
+        return patientRepository.save(retrivedPatient);
+    }
+
+    public Patient dissassociatePatientWithInsurance(DissAssociatePatientInsuranceDTO dto) {
+        Patient retrivedPatient = patientRepository.findById(dto.getPatientId())
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+        // Find the appointment to remove
+        retrivedPatient.setInsurance(null);
+
+        return patientRepository.save(retrivedPatient);
     }
 }

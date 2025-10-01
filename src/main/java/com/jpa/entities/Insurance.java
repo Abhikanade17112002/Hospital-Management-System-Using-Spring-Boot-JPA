@@ -1,5 +1,8 @@
 package com.jpa.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -8,6 +11,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "insurance")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "insuranceId"
+)
 public class Insurance {
 
     @Id
@@ -28,6 +35,7 @@ public class Insurance {
     private LocalDateTime createdAt ;
 
      @OneToOne( mappedBy = "insurance")
+//     @JsonBackReference
      private Patient patient ;
 
     public Insurance() {

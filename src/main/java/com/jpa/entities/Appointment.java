@@ -1,9 +1,17 @@
 package com.jpa.entities;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "appointment")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "appointmentId"
+)
 public class Appointment {
 
     @Id
@@ -18,10 +26,12 @@ public class Appointment {
 
     @ManyToOne
     @JoinColumn( nullable = false  , name = "patientId")
+//    @JsonBackReference
     private Patient patient ;
 
     @ManyToOne
     @JoinColumn( name = "doctorId" , nullable = false)
+//    @JsonManagedReference("doctor-appointments")
     private Doctor doctor ;
 
     public Appointment() {

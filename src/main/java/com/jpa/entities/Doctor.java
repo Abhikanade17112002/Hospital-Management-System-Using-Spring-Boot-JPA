@@ -1,5 +1,9 @@
 package com.jpa.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -7,6 +11,10 @@ import java.util.List;
 
 @Entity
 @Table( name = "doctor")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "doctorId"
+)
 public class Doctor {
     @Id
     @GeneratedValue( strategy = GenerationType.UUID)
@@ -25,18 +33,21 @@ public class Doctor {
     private String education ;
 
     @OneToMany( mappedBy = "doctor")
+//    @JsonBackReference("doctor-appointments")
     private List<Appointment> appointmentList = new ArrayList<>() ;
 
     @OneToOne( mappedBy = "headDoctor")
+//    @JsonBackReference("department-head-doctor")
     private Department isHeadOfDepartment ;
 
     @ManyToMany( mappedBy = "departmentDoctorsList")
-    private List<Department> brlongsToDepartments = new ArrayList<>() ;
+//    @JsonBackReference("doctor-departments")
+    private List<Department> belongsToDepartments = new ArrayList<>() ;
 
     public Doctor() {
     }
 
-    public Doctor(String doctorId, String firstName, String lastName, String email, String education, List<Appointment> appointmentList, Department isHeadOfDepartment, List<Department> brlongsToDepartments) {
+    public Doctor(String doctorId, String firstName, String lastName, String email, String education, List<Appointment> appointmentList, Department isHeadOfDepartment, List<Department> belongsToDepartments) {
         this.doctorId = doctorId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -44,7 +55,7 @@ public class Doctor {
         this.education = education;
         this.appointmentList = appointmentList;
         this.isHeadOfDepartment = isHeadOfDepartment;
-        this.brlongsToDepartments = brlongsToDepartments;
+        this.belongsToDepartments = belongsToDepartments;
     }
 
     public Department getIsHeadOfDepartment() {
@@ -55,12 +66,12 @@ public class Doctor {
         this.isHeadOfDepartment = isHeadOfDepartment;
     }
 
-    public List<Department> getBrlongsToDepartments() {
-        return brlongsToDepartments;
+    public List<Department> getBelongsToDepartments() {
+        return belongsToDepartments;
     }
 
-    public void setBrlongsToDepartments(List<Department> brlongsToDepartments) {
-        this.brlongsToDepartments = brlongsToDepartments;
+    public void setBelongsToDepartments(List<Department> brlongsToDepartments) {
+        this.belongsToDepartments = brlongsToDepartments;
     }
 
     public String getDoctorId() {
@@ -121,7 +132,7 @@ public class Doctor {
                 ", education='" + education + '\'' +
                 ", appointmentList=" + appointmentList +
                 ", isHeadOfDepartment=" + isHeadOfDepartment +
-                ", brlongsToDepartments=" + brlongsToDepartments +
+                ", belongsToDepartments=" + belongsToDepartments +
                 '}';
     }
 }

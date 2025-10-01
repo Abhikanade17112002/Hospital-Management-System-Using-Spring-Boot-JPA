@@ -1,4 +1,6 @@
 package com.jpa.controllers;
+import com.jpa.DTOs.DissAssociatePatientInsuranceDTO;
+import com.jpa.DTOs.DissassociateAppointmentRequestDTO;
 import com.jpa.entities.Insurance;
 import com.jpa.entities.Patient;
 import com.jpa.services.InsuranceService;
@@ -38,10 +40,12 @@ public class PatientController {
     }
 
     @GetMapping
-    public ResponseEntity getHomePage(){
+    public ResponseEntity<List<Patient>> getAllPatients(){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body("<h1> Hello World </h1>") ;
+                .body(
+                        patientService.getAllPatients()
+                ) ;
     }
 
     @GetMapping("/name")
@@ -76,6 +80,26 @@ public class PatientController {
                 .body(
                    patientService.assignInsuranceToThePatientWithId(     insurance , patientId  )
                 ) ;
+    }
+
+    @DeleteMapping("/deleteappointment")
+    public ResponseEntity<Patient> dissassociatePatientWithAppointment(@RequestBody DissassociateAppointmentRequestDTO dissassociateAppointmentRequestDTO){
+
+        return ResponseEntity.status(
+                HttpStatus.OK
+        ).body(
+                patientService.dissassociatePatientWithAppointment(dissassociateAppointmentRequestDTO)
+        ) ;
+    }
+
+    @DeleteMapping("/deleteinsurance")
+    public ResponseEntity<Patient> dissassociatePatientWithInsurance(@RequestBody DissAssociatePatientInsuranceDTO dissAssociatePatientInsuranceDTO){
+
+        return ResponseEntity.status(
+                HttpStatus.OK
+        ).body(
+                patientService.dissassociatePatientWithInsurance(dissAssociatePatientInsuranceDTO)
+        ) ;
     }
 
 }
